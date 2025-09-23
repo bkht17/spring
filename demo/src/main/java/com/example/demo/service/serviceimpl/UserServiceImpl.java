@@ -1,10 +1,12 @@
 package com.example.demo.service.serviceimpl;
 
+import com.example.demo.entity.UploadedFileEntity;
 import com.example.demo.model.User;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.repository.UsersRepository;
 import com.example.demo.dto.UserDto;
 import com.example.demo.dto.mapping.UserMapping;
+import com.example.demo.service.FileStorageService;
 import com.example.demo.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -22,16 +24,16 @@ import java.util.concurrent.atomic.AtomicLong;
 public class UserServiceImpl implements UserService {
 
     private final Map<Long, User> users;
-    private AtomicLong counter = new AtomicLong();
     @Autowired
     UserMapping userMapping;
     @Autowired
     UsersRepository usersRepository;
+    @Autowired
+    FileStorageService fileStorageService;
 
     public UserServiceImpl(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
         users = new HashMap<>();
-        counter = new AtomicLong();
 
     }
 
@@ -59,7 +61,8 @@ public class UserServiceImpl implements UserService {
                 user.lastname(),
                 user.email(),
                 user.password(),
-                user.age()
+                user.age(),
+                null
         );
 
         var savedEntity = usersRepository.save(entityToSave);
@@ -77,7 +80,8 @@ public class UserServiceImpl implements UserService {
                 user.lastname(),
                 user.email(),
                 user.password(),
-                user.age()
+                user.age(),
+                null
         );
         var updatedUser = usersRepository.save(newUser);
 
@@ -93,7 +97,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveFileData(InputStream file) throws IOException {
+    public void saveFileData(InputStream file, Long fileId) throws IOException {
+        UploadedFileEntity uploadedFile = fileStorageService.getFileById(fileId);
+
         List<UserEntity> entities = new ArrayList<>();
         Workbook workbook = WorkbookFactory.create(file);
         Sheet sheet = workbook.getSheetAt(0);
@@ -113,7 +119,8 @@ public class UserServiceImpl implements UserService {
                     lastname,
                     email,
                     password,
-                    age
+                    age,
+                    uploadedFile
             );
 
             entities.add(entity);
@@ -121,8 +128,6 @@ public class UserServiceImpl implements UserService {
 
         usersRepository.saveAll(entities);
     }
-
-
 
     private User toDomain(UserEntity userEntity){
         return new User(

@@ -23,20 +23,16 @@ public class FileController {
 
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        fileStorageService.uploadFile(file);
+        UploadedFileEntity uploadedFile = fileStorageService.uploadFile(file);
 
-        userService.saveFileData(file.getInputStream());
+        userService.saveFileData(file.getInputStream(), uploadedFile.getId());
 
         return ResponseEntity.ok("Excel File and Data Saved into Database");
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable Long id) {
-        UploadedFileEntity file = fileStorageService.getFileById(id);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-                .contentType(MediaType.parseMediaType(file.getContentType()))
-                .body(file.getData());
+        return fileStorageService.downloadFile(id);
     }
 
     @DeleteMapping("/{id}")

@@ -16,6 +16,6 @@ public interface UserService {
     User update(Long id, User user);
     void delete(Long id);
 
-    void saveFileData(InputStream file) throws IOException;
+    void saveFileData(InputStream file, Long id) throws IOException;
 
 }

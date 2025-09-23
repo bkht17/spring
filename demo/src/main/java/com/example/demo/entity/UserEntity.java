@@ -21,4 +21,7 @@ public class UserEntity {
     private String password;
     private int age;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "uploaded_file_id")
+    private UploadedFileEntity uploadedFile;
 }

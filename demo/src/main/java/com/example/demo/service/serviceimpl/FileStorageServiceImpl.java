@@ -4,6 +4,9 @@ import com.example.demo.entity.UploadedFileEntity;
 import com.example.demo.repository.UploadFileRepository;
 import com.example.demo.service.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,14 +37,12 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public UploadedFileEntity updateFile(Long id, MultipartFile file) throws IOException {
-        UploadedFileEntity existingFile = getFileById(id);
+    public ResponseEntity<byte[]> downloadFile(Long id) {
+        UploadedFileEntity file = getFileById(id);
 
-        existingFile.setFilename(file.getOriginalFilename());
-        existingFile.setContentType(file.getContentType());
-        existingFile.setData(file.getBytes());
-        existingFile.setUploadedAt(new java.util.Date());
-
-        return uploadFileRepository.save(existingFile);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .contentType(MediaType.parseMediaType(file.getContentType()))
+                .body(file.getData());
     }
 }
