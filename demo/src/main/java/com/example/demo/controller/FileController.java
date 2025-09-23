@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.FileDto;
 import com.example.demo.entity.UploadedFileEntity;
 import com.example.demo.service.FileStorageService;
 import com.example.demo.service.UserService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/files")
@@ -20,6 +22,11 @@ public class FileController {
 
     @Autowired
     UserService userService;
+
+    @GetMapping("")
+    public ResponseEntity<List<FileDto>> getAllFiles() {
+        return ResponseEntity.ok(fileStorageService.getAllFiles());
+    }
 
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {

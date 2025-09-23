@@ -1,0 +1,29 @@
+<div class="file-list-container">
+  <h2>Uploaded Files</h2>
+
+  <div *ngIf="loading" class="loading">Loading files...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div *ngIf="!loading && !error" class="files-grid">
+    <div *ngFor="let file of files" class="file-card">
+      <div class="file-info">
+        <h3>{{ file.filename }}</h3>
+        <p><strong>Type:</strong> {{ file.contentType }}</p>
+        <p>
+          <strong>Uploaded:</strong> {{ file.uploadedAt | date : "medium" }}
+        </p>
+      </div>
+
+      <div class="file-actions">
+        <button (click)="downloadFile(file.id)" class="btn-download">
+          Download
+        </button>
+        <button (click)="deleteFile(file.id)" class="btn-delete">Delete</button>
+      </div>
+    </div>
+
+    <div *ngIf="files.length === 0" class="no-files">
+      No files uploaded yet.
+    </div>
+  </div>
+</div>

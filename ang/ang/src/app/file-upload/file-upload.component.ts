@@ -45,8 +45,14 @@ export class FileUploadComponent {
     if (!this.selectedFile) return;
 
     this.api.uploadFile(this.selectedFile).subscribe({
-      next: (res) => alert('Success'),
-      error: (err) => alert('File upload failed'),
+      next: (res) => {
+        alert('Success');
+        this.selectedFile = null;
+      },
+      error: (err) => {
+        alert('File upload failed');
+        console.error('Upload error:', err);
+      },
     });
   }
 }

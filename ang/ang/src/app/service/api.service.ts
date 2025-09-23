@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../model/user';
+import { UploadedFile } from '../model/uploadedfile';
 
 @Injectable({
   providedIn: 'root',
@@ -37,11 +38,25 @@ export class ApiService {
     });
   }
 
+  getAllFiles(): Observable<UploadedFile[]> {
+    return this.http.get<UploadedFile[]>(`${this.apiUrl}/files`);
+  }
+
+  downloadFile(id: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/files/${id}`, {
+      responseType: 'blob',
+    });
+  }
+
+  deleteFile(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/files/${id}`);
+  }
+
   uploadFile(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.http.post(`${this.apiUrl}/users/upload`, formData, {
+    return this.http.post(`${this.apiUrl}/files/upload`, formData, {
       responseType: 'text',
     });
   }

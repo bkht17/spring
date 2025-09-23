@@ -1,5 +1,7 @@
 package com.example.demo.service.serviceimpl;
 
+import com.example.demo.dto.FileDto;
+import com.example.demo.dto.mapping.FileMapping;
 import com.example.demo.entity.UploadedFileEntity;
 import com.example.demo.repository.UploadFileRepository;
 import com.example.demo.service.FileStorageService;
@@ -11,11 +13,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
     @Autowired
-    private UploadFileRepository uploadFileRepository;
+    UploadFileRepository uploadFileRepository;
+
+    @Autowired
+    FileMapping fileMapping;
 
     @Override
     public UploadedFileEntity uploadFile(MultipartFile file) throws IOException {
@@ -34,6 +40,12 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public void deleteFile(Long id) {
         uploadFileRepository.deleteById(id);
+    }
+
+    @Override
+    public List<FileDto> getAllFiles() {
+        List<UploadedFileEntity> files = uploadFileRepository.findAll();
+        return fileMapping.toFileDtos(files);
     }
 
     @Override
