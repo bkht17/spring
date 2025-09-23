@@ -1,0 +1,14 @@
+<div *ngIf="loading">Loading...</div>
+<div *ngIf="error">{{ error }}</div>
+
+<div class="user-cards" *ngIf="!loading && !error">
+  <div
+    class="user-card"
+    *ngFor="let user of users"
+    (click)="goToDetail(user.id)"
+  >
+    <h3>{{ user.firstname }} {{ user.lastname }}</h3>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Age:</strong> {{ user.age }}</p>
+  </div>
+</div>

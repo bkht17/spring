@@ -1,0 +1,14 @@
+<div *ngIf="message" class="message">{{ message }}</div>
+
+<form [formGroup]="userForm" (ngSubmit)="updateUser()" class="user-form">
+  <input formControlName="firstname" placeholder="Firstname" />
+  <input formControlName="lastname" placeholder="Lastname" />
+  <input formControlName="email" placeholder="Email" type="email" />
+  <input formControlName="password" placeholder="Password" type="password" />
+  <input formControlName="age" placeholder="Age" type="number" />
+
+  <div class="buttons">
+    <button type="submit">Update</button>
+    <button type="button" (click)="deleteUser()" class="delete">Delete</button>
+  </div>
+</form>
