@@ -24,4 +24,5 @@ public class UserEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uploaded_file_id")
     private UploadedFileEntity uploadedFile;
+
 }

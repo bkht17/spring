@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(Long id, User user) {
-        var userEntity = usersRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id " + id));
+         UserEntity userEntity = usersRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id " + id));
 
         var oldUser = users.get(id);
         var newUser = new UserEntity(

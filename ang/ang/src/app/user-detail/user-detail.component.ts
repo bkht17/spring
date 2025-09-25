@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../service/api.service';
+import { UploadedFile } from '../model/uploadedfile';
 
 @Component({
   selector: 'app-user-detail',
@@ -14,6 +15,7 @@ import { ApiService } from '../service/api.service';
 export class UserDetailComponent implements OnInit {
   userForm!: FormGroup;
   userId!: number;
+  uploadedFile!: UploadedFile;
   message = '';
 
   constructor(

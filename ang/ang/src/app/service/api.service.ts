@@ -28,7 +28,7 @@ export class ApiService {
     });
   }
 
-  updateUser(id: number, user: any) {
+  updateUser(id: number, user: User) {
     return this.http.put(`${this.apiUrl}/users/${id}`, user, {
       responseType: 'text',
     });
