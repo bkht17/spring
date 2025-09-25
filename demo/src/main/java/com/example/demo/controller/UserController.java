@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.PageResponse;
 import com.example.demo.dto.UserFilter;
 import com.example.demo.model.User;
 import com.example.demo.dto.UserDto;
@@ -31,6 +32,11 @@ public class UserController {
     @GetMapping("")
     public ResponseEntity<List<UserDto>> getAll(UserFilter filter) {
         return ResponseEntity.ok(userService.getAll(filter));
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<PageResponse<UserDto>> getAllWithPagination(UserFilter filter) {
+        return ResponseEntity.ok(userService.getAllWithPagination(filter));
     }
 
     @PostMapping("")

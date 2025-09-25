@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { User } from '../model/user';
 import { UploadedFile } from '../model/uploadedfile';
 import { UserFilter } from '../model/userfilter';
+import { PageResponse } from '../model/pageresponse';
 
 @Injectable({
   providedIn: 'root',
@@ -76,5 +77,29 @@ export class ApiService {
     }
 
     return this.http.get<any[]>(`${this.apiUrl}/users`, { params });
+  }
+
+  getUsersWithPagination(filter: UserFilter): Observable<PageResponse<any>> {
+    let params = new HttpParams();
+
+    if (filter.firstname) {
+      params = params.set('firstname', filter.firstname);
+    }
+    if (filter.lastname) {
+      params = params.set('lastname', filter.lastname);
+    }
+    if (filter.age) {
+      params = params.set('age', filter.age.toString());
+    }
+    if (filter.page !== undefined) {
+      params = params.set('page', filter.page.toString());
+    }
+    if (filter.size !== undefined) {
+      params = params.set('size', filter.size.toString());
+    }
+
+    return this.http.get<PageResponse<any>>(`${this.apiUrl}/users/page`, {
+      params,
+    });
   }
 }

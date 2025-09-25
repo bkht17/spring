@@ -1,5 +1,6 @@
 package com.example.demo.service.serviceimpl;
 
+import com.example.demo.dto.PageResponse;
 import com.example.demo.dto.UserFilter;
 import com.example.demo.entity.UploadedFileEntity;
 import com.example.demo.model.User;
@@ -9,7 +10,13 @@ import com.example.demo.dto.UserDto;
 import com.example.demo.dto.mapping.UserMapping;
 import com.example.demo.service.FileStorageService;
 import com.example.demo.service.UserService;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -19,7 +26,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -31,6 +37,8 @@ public class UserServiceImpl implements UserService {
     UsersRepository usersRepository;
     @Autowired
     FileStorageService fileStorageService;
+    @Autowired
+    private EntityManager entityManager;
 
     public UserServiceImpl(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
@@ -59,6 +67,35 @@ public class UserServiceImpl implements UserService {
         List<UserEntity> userEntities = usersRepository.findAllByFilter(filter);
 
         return userMapping.toUserDtos(userEntities.stream().map(this::toDomain).toList());
+    }
+
+    @Override
+    public PageResponse<UserDto> getAllWithPagination(UserFilter filter) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<UserEntity> criteria = cb.createQuery(UserEntity.class);
+        Root<UserEntity> user = criteria.from(UserEntity.class);
+
+        List<Predicate> predicates = buildPredicates(cb, user, filter);
+        criteria.where(predicates.toArray(new Predicate[0]));
+
+        Long totalElements = getTotalElements(filter);
+
+        TypedQuery<UserEntity> query = entityManager.createQuery(criteria);
+        query.setFirstResult(filter.page() * filter.size());
+        query.setMaxResults(filter.size());
+
+        List<UserEntity> userEntities = query.getResultList();
+        List<UserDto> userDtos = userMapping.toUserDtos(userEntities.stream().map(this::toDomain).toList());
+
+        int totalPages = (int) Math.ceil((double) totalElements / filter.size());
+
+        return new PageResponse<>(
+                userDtos,
+                filter.page(),
+                totalPages,
+                totalElements,
+                filter.size()
+        );
     }
 
     @Override
@@ -148,5 +185,36 @@ public class UserServiceImpl implements UserService {
                 userEntity.getUploadedFile()
         );
     };
+
+    private List<Predicate> buildPredicates(CriteriaBuilder cb, Root<UserEntity> user, UserFilter filter) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (filter.firstname() != null && !filter.firstname().isBlank()) {
+            predicates.add(cb.like(cb.lower(user.get("firstname")),
+                    "%" + filter.firstname().toLowerCase() + "%"));
+        }
+
+        if (filter.lastname() != null && !filter.lastname().isBlank()) {
+            predicates.add(cb.like(cb.lower(user.get("lastname")),
+                    "%" + filter.lastname().toLowerCase() + "%"));
+        }
+
+        if (filter.age() != null && filter.age() > 0) {
+            predicates.add(cb.equal(user.get("age"), filter.age()));
+        }
+
+        return predicates;
+    }
+
+    private Long getTotalElements(UserFilter filter) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<UserEntity> user = countQuery.from(UserEntity.class);
+
+        List<Predicate> predicates = buildPredicates(cb, user, filter);
+        countQuery.select(cb.count(user)).where(predicates.toArray(new Predicate[0]));
+
+        return entityManager.createQuery(countQuery).getSingleResult();
+    }
 
 }

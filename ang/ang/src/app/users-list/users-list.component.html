@@ -14,7 +14,26 @@
     <p><strong>Age:</strong> {{ user.age }}</p>
   </div>
 
-  <div *ngIf="users.length === 0 && !loading" class="no-users">
-    No users found matching criteria
+  <div *ngIf="users.length === 0" class="no-users">
+    No users found matching your criteria.
   </div>
+</div>
+
+<div class="pagination-controls" *ngIf="totalPages > 1">
+  <button (click)="prevPage()" [disabled]="currentPage === 0">Previous</button>
+
+  <div class="page-numbers">
+    <button
+      *ngFor="let page of pages"
+      (click)="goToPage(page)"
+      [class.active]="page === currentPage"
+      class="page-btn"
+    >
+      {{ page + 1 }}
+    </button>
+  </div>
+
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages - 1">
+    Next
+  </button>
 </div>
