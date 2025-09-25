@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 
+import com.example.demo.dto.UserFilter;
 import com.example.demo.model.User;
 import com.example.demo.dto.UserDto;
 
@@ -11,6 +12,7 @@ import java.util.List;
 public interface UserService {
     UserDto getUserById(Long id);
     List<UserDto> getAll();
+    List<UserDto> getAll(UserFilter userFilter);
 
     User create(User user);
     User update(Long id, User user);

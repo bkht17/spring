@@ -31,3 +31,37 @@
   color: #555;
   font-size: 14px;
 }
+
+.filter-info {
+  background: #e3f2fd;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+
+  p {
+    margin: 0;
+    color: #1976d2;
+  }
+}
+
+.clear-filter-btn {
+  margin-left: 10px;
+  padding: 4px 8px;
+  background: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+
+  &:hover {
+    background: #f57c00;
+  }
+}
+
+.no-users {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-style: italic;
+}

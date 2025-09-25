@@ -1,19 +1,14 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.UploadedFileEntity;
+import com.example.demo.dto.UserFilter;
 import com.example.demo.model.User;
 import com.example.demo.dto.UserDto;
 import com.example.demo.service.FileStorageService;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -34,8 +29,8 @@ public class UserController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<UserDto>> getAll() {
-        return ResponseEntity.ok(userService.getAll());
+    public ResponseEntity<List<UserDto>> getAll(UserFilter filter) {
+        return ResponseEntity.ok(userService.getAll(filter));
     }
 
     @PostMapping("")

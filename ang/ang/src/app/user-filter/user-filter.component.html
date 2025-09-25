@@ -1,0 +1,23 @@
+<div class="filter-container">
+  <h3>Filter Users</h3>
+  <form [formGroup]="filterForm" (ngSubmit)="applyFilter()" class="filter-form">
+    <div class="filter-group">
+      <input type="text" formControlName="firstname" placeholder="First Name" />
+    </div>
+
+    <div class="filter-group">
+      <input type="text" formControlName="lastname" placeholder="Last Name" />
+    </div>
+
+    <div class="filter-group">
+      <input type="number" formControlName="age" placeholder="Age" />
+    </div>
+
+    <div class="filter-actions">
+      <button type="submit" class="btn-apply">Apply Filter</button>
+      <button type="button" (click)="clearFilter()" class="btn-clear">
+        Clear
+      </button>
+    </div>
+  </form>
+</div>

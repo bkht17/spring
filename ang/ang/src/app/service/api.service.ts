@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../model/user';
 import { UploadedFile } from '../model/uploadedfile';
+import { UserFilter } from '../model/userfilter';
 
 @Injectable({
   providedIn: 'root',
@@ -59,5 +60,21 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/files/upload`, formData, {
       responseType: 'text',
     });
+  }
+
+  getUsersWithFilter(filter: UserFilter): Observable<any[]> {
+    let params = new HttpParams();
+
+    if (filter.firstname) {
+      params = params.set('firstname', filter.firstname);
+    }
+    if (filter.lastname) {
+      params = params.set('lastname', filter.lastname);
+    }
+    if (filter.age) {
+      params = params.set('age', filter.age.toString());
+    }
+
+    return this.http.get<any[]>(`${this.apiUrl}/users`, { params });
   }
 }

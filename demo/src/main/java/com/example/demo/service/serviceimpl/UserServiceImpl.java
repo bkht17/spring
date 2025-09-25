@@ -1,5 +1,6 @@
 package com.example.demo.service.serviceimpl;
 
+import com.example.demo.dto.UserFilter;
 import com.example.demo.entity.UploadedFileEntity;
 import com.example.demo.model.User;
 import com.example.demo.entity.UserEntity;
@@ -54,6 +55,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserDto> getAll(UserFilter filter) {
+        List<UserEntity> userEntities = usersRepository.findAllByFilter(filter);
+
+        return userMapping.toUserDtos(userEntities.stream().map(this::toDomain).toList());
+    }
+
+    @Override
     public User create(User user) {
         var entityToSave = new UserEntity(
                 null,
@@ -81,7 +89,7 @@ public class UserServiceImpl implements UserService {
                 user.email(),
                 user.password(),
                 user.age(),
-                null
+                user.uploadedFile()
         );
         var updatedUser = usersRepository.save(newUser);
 
@@ -136,7 +144,8 @@ public class UserServiceImpl implements UserService {
                 userEntity.getLastname(),
                 userEntity.getEmail(),
                 userEntity.getPassword(),
-                userEntity.getAge()
+                userEntity.getAge(),
+                userEntity.getUploadedFile()
         );
     };
 
