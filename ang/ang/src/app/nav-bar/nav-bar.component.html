@@ -1,8 +1,20 @@
 <nav>
   <ul>
-    <li><a [routerLink]="['/users']">Show all users</a></li>
-    <li><a [routerLink]="['/post']">Create</a></li>
-    <li><a [routerLink]="['/upload']">Upload</a></li>
-    <li><a [routerLink]="['/files']">View Files</a></li>
+    <li><a routerLink="/users">Users</a></li>
+    <li><a routerLink="/post">Create User</a></li>
+    <li><a routerLink="/upload">Upload File</a></li>
+    <li><a routerLink="/files">Files</a></li>
+
+    <li *ngIf="!authService.isLoggedIn()" style="margin-left: auto">
+      <a routerLink="/login">Login</a>
+    </li>
+
+    <li *ngIf="authService.isLoggedIn()" style="margin-left: auto">
+      <a>Welcome, {{ authService.getUsername() }}</a>
+    </li>
+
+    <li *ngIf="authService.isLoggedIn()">
+      <a (click)="logout()" style="cursor: pointer">Logout</a>
+    </li>
   </ul>
 </nav>
