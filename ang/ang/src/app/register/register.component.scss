@@ -1,4 +1,4 @@
-.login-container {
+.register-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -6,7 +6,7 @@
   padding: 20px;
 }
 
-.login-card {
+.register-card {
   background: white;
   padding: 40px;
   border-radius: 12px;
@@ -21,7 +21,7 @@ h2 {
   color: #333;
 }
 
-.login-form {
+.register-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -59,7 +59,7 @@ input {
   font-size: 14px;
 }
 
-.login-btn {
+.register-btn {
   padding: 12px;
   background-color: #4a90e2;
   color: white;
@@ -79,7 +79,7 @@ input {
   }
 }
 
-.register-link {
+.login-link {
   text-align: center;
   margin-top: 20px;
 
