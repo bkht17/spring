@@ -141,6 +141,12 @@
             <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
             <version>7.21.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.camunda.bpm</groupId>
+            <artifactId>camunda-engine-spring</artifactId>
+            <version>7.21.0</version>
+        </dependency>
     </dependencies>
 
 
