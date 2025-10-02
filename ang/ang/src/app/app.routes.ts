@@ -7,6 +7,7 @@ import { FileListComponent } from './file-list/file-list.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { AuthGuard } from './guard/auth.guard';
+import { CamundaUsersListComponent } from './camunda-users-list/camunda-users-list.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -21,4 +22,5 @@ export const routes: Routes = [
   { path: 'upload', component: FileUploadComponent, canActivate: [AuthGuard] },
   { path: 'files', component: FileListComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/users', pathMatch: 'full' },
+  { path: 'camunda-users', component: CamundaUsersListComponent },
 ];
