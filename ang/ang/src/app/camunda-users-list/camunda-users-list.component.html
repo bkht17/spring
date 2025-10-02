@@ -1,6 +1,7 @@
 <div class="camunda-users-container">
   <h2>Camunda Users Management</h2>
 
+  <!-- Search and Actions -->
   <div class="toolbar">
     <div class="search-box">
       <input
@@ -12,11 +13,12 @@
       <button (click)="searchUsers()">Search</button>
       <button (click)="loadUsers()">Reset</button>
     </div>
-    <button class="btn-primary" (click)="showUserForm = true">Add User</button>
+    <button class="btn-primary" (click)="addNewUser()">Add User</button>
   </div>
 
+  <!-- User Form -->
   <div *ngIf="showUserForm" class="user-form">
-    <h3>{{ editingUser ? "Edit User" : "Create User" }}</h3>
+    <h3>{{ isEditing ? "Edit User" : "Create User" }}</h3>
     <form (ngSubmit)="submitForm()">
       <div class="form-group">
         <label>User ID:</label>
@@ -24,7 +26,7 @@
           type="text"
           [(ngModel)]="userForm.id"
           name="id"
-          [disabled]="editingUser"
+          [disabled]="isEditing"
           required
         />
       </div>
@@ -61,12 +63,15 @@
           type="password"
           [(ngModel)]="userForm.password"
           name="password"
-          [required]="!editingUser"
+          [required]="!isEditing"
         />
+        <small *ngIf="isEditing" class="password-hint">
+          Leave empty to keep current password
+        </small>
       </div>
       <div class="form-actions">
-        <button type="submit" class="btn-primary">
-          {{ editingUser ? "Update" : "Create" }}
+        <button type="submit" class="btn-primary" [disabled]="!isFormValid()">
+          {{ isEditing ? "Update" : "Create" }}
         </button>
         <button type="button" (click)="cancelForm()" class="btn-secondary">
           Cancel
@@ -75,9 +80,11 @@
     </form>
   </div>
 
+  <!-- Loading and Error -->
   <div *ngIf="loading" class="loading">Loading users...</div>
   <div *ngIf="error" class="error">{{ error }}</div>
 
+  <!-- Users Table -->
   <div *ngIf="!loading && !error" class="users-table">
     <table>
       <thead>

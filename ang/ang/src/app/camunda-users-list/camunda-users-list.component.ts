@@ -17,9 +17,12 @@ export class CamundaUsersListComponent implements OnInit {
   error = '';
   searchTerm = '';
 
+  // For creating/editing
   showUserForm = false;
-  editingUser: CamundaUser | null = null;
-  userForm: CamundaUser = {
+  isEditing = false;
+
+  // Separate form model
+  userForm = {
     id: '',
     firstName: '',
     lastName: '',
@@ -74,16 +77,16 @@ export class CamundaUsersListComponent implements OnInit {
         this.showUserForm = false;
       },
       error: (err) => {
-        this.error = 'Failed to create user';
+        this.error = 'Failed to create user: ' + (err.error || err.message);
         console.error('Create error:', err);
       },
     });
   }
 
   updateUser(): void {
-    if (this.editingUser) {
+    if (this.userForm.id) {
       this.camundaService
-        .updateCamundaUser(this.editingUser.id, this.userForm)
+        .updateCamundaUser(this.userForm.id, this.userForm)
         .subscribe({
           next: () => {
             this.loadUsers();
@@ -91,7 +94,7 @@ export class CamundaUsersListComponent implements OnInit {
             this.showUserForm = false;
           },
           error: (err) => {
-            this.error = 'Failed to update user';
+            this.error = 'Failed to update user: ' + (err.error || err.message);
             console.error('Update error:', err);
           },
         });
@@ -105,7 +108,7 @@ export class CamundaUsersListComponent implements OnInit {
           this.loadUsers();
         },
         error: (err) => {
-          this.error = 'Failed to delete user';
+          this.error = 'Failed to delete user: ' + (err.error || err.message);
           console.error('Delete error:', err);
         },
       });
@@ -113,14 +116,19 @@ export class CamundaUsersListComponent implements OnInit {
   }
 
   editUser(user: CamundaUser): void {
-    this.editingUser = user;
-    this.userForm = { ...user };
-    this.userForm.password = '';
+    this.isEditing = true;
+    this.userForm = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      password: '', // Clear password for security
+    };
     this.showUserForm = true;
   }
 
   submitForm(): void {
-    if (this.editingUser) {
+    if (this.isEditing) {
       this.updateUser();
     } else {
       this.createUser();
@@ -135,11 +143,34 @@ export class CamundaUsersListComponent implements OnInit {
       email: '',
       password: '',
     };
-    this.editingUser = null;
+    this.isEditing = false;
   }
 
   cancelForm(): void {
     this.resetForm();
     this.showUserForm = false;
+  }
+
+  addNewUser(): void {
+    this.resetForm();
+    this.showUserForm = true;
+    this.isEditing = false;
+  }
+
+  isFormValid(): boolean {
+    if (
+      !this.userForm.id ||
+      !this.userForm.firstName ||
+      !this.userForm.lastName ||
+      !this.userForm.email
+    ) {
+      return false;
+    }
+
+    if (!this.isEditing && !this.userForm.password) {
+      return false;
+    }
+
+    return true;
   }
 }
