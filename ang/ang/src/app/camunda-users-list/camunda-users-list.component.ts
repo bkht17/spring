@@ -17,11 +17,9 @@ export class CamundaUsersListComponent implements OnInit {
   error = '';
   searchTerm = '';
 
-  // For creating/editing
   showUserForm = false;
   isEditing = false;
 
-  // Separate form model
   userForm = {
     id: '',
     firstName: '',
@@ -122,7 +120,7 @@ export class CamundaUsersListComponent implements OnInit {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      password: '', // Clear password for security
+      password: '',
     };
     this.showUserForm = true;
   }
